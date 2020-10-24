@@ -14,19 +14,19 @@ func init() {
         Usage: "Initialize application",
         ArgsUsage: "addrs",
         Flags: []cli.Flag{
-            cli.StringFlag{
+            &cli.StringFlag{
                 Name: "u",
                 Usage: "auth username.",
             },
-            cli.StringFlag{
+            &cli.StringFlag{
                 Name: "p",
                 Usage: "auth password.",
             },
         },
-        Action: func(ctx *cli.Context) {
+        Action: func(ctx *cli.Context)error {
             if !ctx.Args().Present() {
                 cli.ShowSubcommandHelp(ctx)
-                return
+                return nil
             }
             user, pwd := ctx.String("u"), ctx.String("p")
             addrs := strings.Split(ctx.Args().First(), ",")
@@ -36,14 +36,15 @@ func init() {
             data, err := json.Marshal(config)
             if err != nil {
                 fmt.Println(err)
-                return
+                return nil
             }
             if err := ioutil.WriteFile(confFile, data, 0700); err != nil {
                 fmt.Println(err)
             }
+            return nil
         },
     }
-    app.Commands = append(app.Commands, command)
+    app.Commands = append(app.Commands, &command)
 }
 
 

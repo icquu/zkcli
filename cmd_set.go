@@ -9,24 +9,25 @@ func init() {
         Name: "set",
         Usage: "Set path data",
         ArgsUsage: "path data",
-        Action: func(ctx *cli.Context) {
-            if len(ctx.Args()) < 2 {
+        Action: func(ctx *cli.Context)error {
+            if ctx.Args().Len() < 2 {
                 cli.ShowSubcommandHelp(ctx)
-                return
+                return nil
             }
             path, data := ctx.Args().Get(0), ctx.Args().Get(1)
             stat, err := conn.Set(path, []byte(data), -1)
             if err != nil {
                 println("Error:", err.Error())
-                return
+                return nil
             }
             println("Set", path)
             println("")
             println("STAT:")
             printObj(stat)
+            return nil
         },
     }
-    app.Commands = append(app.Commands, command)
+    app.Commands = append(app.Commands, &command)
     app.BashComplete = nodeCompletion
 }
 

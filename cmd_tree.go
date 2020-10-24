@@ -12,23 +12,24 @@ func init() {
         Usage: "List nodes in a tree-like format",
         ArgsUsage: "path",
         Flags: []cli.Flag{
-            cli.IntFlag{
+            &cli.IntFlag{
                 Name: "l",
                 Usage: "Max display depth of the tree.",
             },
         },
-        Action: func(ctx *cli.Context) {
+        Action: func(ctx *cli.Context)error {
             if !ctx.Args().Present() {
                 cli.ShowSubcommandHelp(ctx)
-                return
+                return nil
             }
             maxLevel := ctx.Int("l")
             root := ctx.Args().First()
             fmt.Println(root)
             listTree(root, "", 0, maxLevel)
+            return nil
         },
     }
-    app.Commands = append(app.Commands, command)
+    app.Commands = append(app.Commands, &command)
     app.BashComplete = nodeCompletion
 }
 

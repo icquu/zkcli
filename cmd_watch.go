@@ -12,10 +12,10 @@ func init() {
         Name: "watch",
         Usage: "Watch path",
         ArgsUsage: "path",
-        Action: func(ctx *cli.Context) {
-            if len(ctx.Args()) < 1 {
+        Action: func(ctx *cli.Context)error {
+            if ctx.Args().Len() < 1 {
                 cli.ShowSubcommandHelp(ctx)
-                return
+                return nil
             }
             path := ctx.Args().First()
             fmt.Printf("watching %s ...\n", path)
@@ -39,11 +39,11 @@ func init() {
                 case ev := <-events:
                     fmt.Printf("[%s] %s\n", time.Now().Format("2006-01-02 15:04:05"), ev.Type)
                 case <-quit:
-                    return
+                    return nil
                 }
             }
         },
     }
-    app.Commands = append(app.Commands, command)
+    app.Commands = append(app.Commands, &command)
     app.BashComplete = nodeCompletion
 }

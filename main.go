@@ -46,8 +46,8 @@ func main() {
 
     app.Name = "zkcli"
     app.Usage = "zookeeper client tool"
-    app.Author = "sijie.li"
-    app.Email = "lsj86@qq.com"
+    //app.Authors = "sijie.li"
+    //app.Email = "lsj86@qq.com"
     app.Version = "0.0.1"
     app.EnableBashCompletion = true
     app.Before = initialize

@@ -12,17 +12,17 @@ func init() {
         Name: "ls",
         Usage: "List child nodes",
         ArgsUsage: "path",
-        Action: func(ctx *cli.Context) {
+        Action: func(ctx *cli.Context) error{
             if !ctx.Args().Present() {
                 cli.ShowSubcommandHelp(ctx)
-                return
+                return nil
             }
 
             root := ctx.Args().First()
             children, _, err := conn.Children(root)
             if err != nil {
                 println(err.Error())
-                return
+                return nil
             }
 
             data := make([]map[string]string, 0, len(children))
@@ -49,9 +49,10 @@ func init() {
             }
 
             printTable(columns, data)
+            return nil
         },
     }
-    app.Commands = append(app.Commands, command)
+    app.Commands = append(app.Commands, &command)
     app.BashComplete = nodeCompletion
 }
 

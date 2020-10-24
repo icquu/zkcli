@@ -12,15 +12,15 @@ func init() {
         Usage: "Delete path",
         ArgsUsage: "path",
         Flags: []cli.Flag{
-            cli.BoolFlag{
+            &cli.BoolFlag{
                 Name: "r",
                 Usage: "Delete the supplied path and all child nodes.",
             },
         },
-        Action: func(ctx *cli.Context) {
+        Action: func(ctx *cli.Context) error {
             if !ctx.Args().Present() {
                 cli.ShowSubcommandHelp(ctx)
-                return
+                return nil
             }
             r := ctx.Bool("r")
             path := ctx.Args().First()
@@ -28,17 +28,18 @@ func init() {
             if exist, _, err := conn.Exists(path); !exist || err != nil {
                 if err != nil {
                     fmt.Printf("Delete %s error: %s\n", path, err)
-                    return
+                    return  nil
                 }
                 if !exist {
                     fmt.Printf("Delete %s error: %s\n", path, "path not exists.")
-                    return
+                    return nil
                 }
             }
             removeDeep(path, r)
+            return nil
         },
     }
-    app.Commands = append(app.Commands, command)
+    app.Commands = append(app.Commands, &command)
     app.BashComplete = nodeCompletion
 }
 

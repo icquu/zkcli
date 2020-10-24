@@ -11,16 +11,16 @@ func init() {
         Name: "get",
         Usage: "Get path info",
         ArgsUsage: "path",
-        Action: func(ctx *cli.Context) {
+        Action: func(ctx *cli.Context) error {
             if !ctx.Args().Present() {
                 cli.ShowSubcommandHelp(ctx)
-                return
+                return nil
             }
             p := ctx.Args().First()
             data, stat, err := conn.Get(p)
             if err != nil {
                 fmt.Println(err)
-                return
+                return nil
             }
             fmt.Printf("DATA:\n%s\n", string(data))
             if len(data) > 0 {
@@ -36,9 +36,10 @@ func init() {
                     fmt.Println(path.Join(p, item))
                 }
             }
+            return nil
         },
     }
-    app.Commands = append(app.Commands, command)
+    app.Commands = append(app.Commands, &command)
     app.BashComplete = nodeCompletion
 }
 
